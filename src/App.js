@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import "./App.css";
 import Button from "./components/Button";
 import Input from "./components/Input";
-import ClearButton from "./components/ClearButton";
 import { evaluate } from "mathjs";
 
 class App extends Component {
@@ -93,7 +92,7 @@ class App extends Component {
     };
 
     evaluate = () => {
-        const answer = evaluate(this.state.input);
+        const answer = evaluate(this.state.input).toString();
         this.setState({
             input: answer,
             evaluated: true,
@@ -109,6 +108,21 @@ class App extends Component {
                         <Input id="display">{this.state.input}</Input>
                     </div>
                     <div className="row">
+                        <Button id="clear" handleClick={this.clearInput}>
+                            Clear
+                        </Button>
+                        <Button id="clearlast" handleClick={this.clearLast}>
+                            Del
+                        </Button>
+                        <Button
+                            id="divide"
+                            operator={"/"}
+                            handleClick={this.addToInput}
+                        >
+                            &#247;
+                        </Button>
+                    </div>
+                    <div className="row">
                         <Button id="seven" handleClick={this.addToInput}>
                             7
                         </Button>
@@ -118,8 +132,12 @@ class App extends Component {
                         <Button id="nine" handleClick={this.addToInput}>
                             9
                         </Button>
-                        <Button id="divide" handleClick={this.addToInput}>
-                            /
+                        <Button
+                            id="multiply"
+                            operator={"*"}
+                            handleClick={this.addToInput}
+                        >
+                            &#215;
                         </Button>
                     </div>
                     <div className="row">
@@ -132,8 +150,12 @@ class App extends Component {
                         <Button id="six" handleClick={this.addToInput}>
                             6
                         </Button>
-                        <Button id="multiply" handleClick={this.addToInput}>
-                            *
+                        <Button
+                            id="subtract"
+                            operator={"-"}
+                            handleClick={this.addToInput}
+                        >
+                            &#8722;
                         </Button>
                     </div>
                     <div className="row">
@@ -146,34 +168,24 @@ class App extends Component {
                         <Button id="three" handleClick={this.addToInput}>
                             3
                         </Button>
-                        <Button id="add" handleClick={this.addToInput}>
-                            +
+                        <Button
+                            id="add"
+                            operator={"+"}
+                            handleClick={this.addToInput}
+                        >
+                            &#43;
                         </Button>
                     </div>
                     <div className="row">
-                        <Button id="decimal" handleClick={this.addToInput}>
-                            .
-                        </Button>
                         <Button id="zero" handleClick={this.addZeroToInput}>
                             0
+                        </Button>
+                        <Button id="decimal" handleClick={this.addToInput}>
+                            .
                         </Button>
                         <Button id="equals" handleClick={this.evaluate}>
                             =
                         </Button>
-                        <Button id="subtract" handleClick={this.addToInput}>
-                            -
-                        </Button>
-                    </div>
-                    <div className="clear-btn">
-                        <ClearButton id="clear" handleClick={this.clearInput}>
-                            Clear
-                        </ClearButton>
-                        <ClearButton
-                            id="clearlast"
-                            handleClick={this.clearLast}
-                        >
-                            Clear Last
-                        </ClearButton>
                     </div>
                 </div>
             </div>

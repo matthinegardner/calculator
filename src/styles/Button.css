@@ -1,16 +1,31 @@
 .button {
-  display: flex;
-  height: 4em;
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  font-size: 1.4em;
-  background-color: #e0e1e6;
-  color: #888;
-  outline: 1px solid #888;
+    display: flex;
+    height: 4em;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.4em;
+    background-color: #616161;
+    color: #fafafa;
+    outline: 1px solid #888;
+}
+.button-double {
+    height: 4em;
+    width: 50%;
+    font-weight: bold;
+    font-size: 1.4em;
+    background-color: #757575;
+    color: #fafafa;
+    outline: 1px solid #888;
+    text-align: center;
+    line-height: 4em;
+}
+.button-delete {
+    background-color: #757575;
+    color: #fafafa;
 }
 .operator {
-  background-color: #fe9241;
-  color: white;
+    background-color: #00ACC1;
+    color: #FAFAFA;
 }

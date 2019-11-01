@@ -1,15 +1,27 @@
 import React from "react";
 import "../styles/Button.css";
+import classnames from "classnames";
 
-const isOperator = val => !isNaN(val) || val === "." || val === "=";
-
-const Button = props => (
-  <div
-    className={`button ${isOperator(props.children) ? "" : "operator"}`}
-    onClick={() => props.handleClick(props.children)}
-  >
-    {props.children}
-  </div>
-);
+const Button = props => {
+    const buttonSize =
+        props.children === "Clear" || props.children === "="
+            ? "button-double"
+            : "button";
+    const deleteButton = props.children === "Del" ? "button-delete" : "";
+    const operatorButton = props.operator ? "operator" : "";
+    const cn = classnames(buttonSize, operatorButton, deleteButton);
+    return (
+        <div
+            className={cn}
+            onClick={() =>
+                props.handleClick(
+                    props.operator ? props.operator : props.children
+                )
+            }
+        >
+            {props.children}
+        </div>
+    );
+};
 
 export default Button;
