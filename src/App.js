@@ -13,7 +13,7 @@ class App extends Component {
             previousVal: "",
             previousAnswer: "",
             evaluated: false,
-            decimalInVal: false
+            decimalInNumber: false
         };
     }
 
@@ -21,11 +21,12 @@ class App extends Component {
         const operators = ["+", "-", "*", "/"];
         const isOperator = operators.includes(val);
 
-        if (this.state.previousVal === "." && val === ".") {
+        if (this.state.decimalInNumber && val === ".") {
             return null;
         }
         // Normal input - will append to end
         if (!this.state.evaluated && this.state.input !== "0") {
+            // If the previous value is an operator, replace it with the new operator.
             if (isOperator && operators.includes(this.state.previousVal)) {
                 this.clearLastOperator(val);
                 return null;
@@ -48,7 +49,20 @@ class App extends Component {
 
         // For cases where the answer is in the display, but the user has entered a number (starts a new calculation)
         else {
-            this.setState({ input: val, evaluated: false, previousVal: val });
+            this.setState({
+                input: val,
+                evaluated: false,
+                previousVal: val,
+                decimalInNumber: false
+            });
+        }
+
+        if (val === ".") {
+            this.setState({ decimalInNumber: true });
+        }
+
+        if (isOperator) {
+            this.setState({ decimalInNumber: false });
         }
     };
 

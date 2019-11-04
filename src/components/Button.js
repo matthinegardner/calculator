@@ -12,6 +12,7 @@ const Button = props => {
     const cn = classnames(buttonSize, operatorButton, deleteButton);
     return (
         <div
+            id={props.id}
             className={cn}
             onClick={() =>
                 props.handleClick(
