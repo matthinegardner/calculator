@@ -13,37 +13,69 @@ class App extends Component {
             previousVal: "",
             previousAnswer: "",
             evaluated: false,
-            decimalInNumber: false
+            decimalInNumber: false,
+            negativeSignInNumber: false
         };
     }
 
+    // Handler for "0" input. The logic is to prevent multiple leading zeros
+    addZeroToInput = val => {
+        if (this.state.input !== "0") {
+            this.setState({ input: this.state.input + val, previousVal: val });
+        }
+    };
+
+    // Handler for all other input, other than "0".
     addToInput = val => {
         const operators = ["+", "-", "*", "/"];
+        const operatorsNoSubtract = ["+", "*", "/"];
         const isOperator = operators.includes(val);
+        const {
+            decimalInNumber,
+            input,
+            evaluated,
+            previousVal,
+            negativeSignInNumber
+        } = this.state;
 
-        if (this.state.decimalInNumber && val === ".") {
+        if (
+            (decimalInNumber && val === ".") ||
+            (negativeSignInNumber && val === "-")
+        ) {
             return null;
         }
+
+        if (
+            (val === "-" && input === "0") ||
+            (val === "-" && operators.includes(previousVal))
+        ) {
+            this.setState({ negativeSignInNumber: true });
+        }
+
         // Normal input - will append to end
-        if (!this.state.evaluated && this.state.input !== "0") {
-            // If the previous value is an operator, replace it with the new operator.
-            if (isOperator && operators.includes(this.state.previousVal)) {
+        if (!evaluated && input !== "0") {
+            // if val is "-" and previousval is +, *, /
+            if (val === "-" && operatorsNoSubtract.includes(previousVal)) {
+                // if val is +, -, /, * and the previous value is is +, *, /, replace operator with new operator
+            } else if (isOperator && operators.includes(previousVal)) {
                 this.clearLastOperator(val);
                 return null;
             }
 
             this.setState({
-                input: this.state.input + val,
+                input: input + val,
                 evaluated: false,
-                previousVal: val
+                previousVal: val,
+                negativeSignInNumber: false
             });
 
             // For cases where we want to use the answer and perform another operation ( starts with + - * / )
-        } else if (this.state.evaluated && isOperator) {
+        } else if (evaluated && isOperator) {
             this.setState({
-                input: this.state.input + val,
+                input: input + val,
                 evaluated: false,
-                previousVal: val
+                previousVal: val,
+                negativeSignInNumber: false
             });
         }
 
@@ -53,7 +85,8 @@ class App extends Component {
                 input: val,
                 evaluated: false,
                 previousVal: val,
-                decimalInNumber: false
+                decimalInNumber: false,
+                negativeSignInNumber: false
             });
         }
 
@@ -66,28 +99,47 @@ class App extends Component {
         }
     };
 
-    // To prevent multiple zeros
-    addZeroToInput = val => {
-        if (this.state.input !== "0") {
-            this.setState({ input: this.state.input + val, previousVal: val });
-        }
-    };
-
     clearInput = () => {
         this.setState({
-            input: "0"
+            input: "0",
+            previousVal: "",
+            previousAnswer: "",
+            evaluated: false,
+            decimalInNumber: false,
+            negativeSignInNumber: false
         });
     };
 
+    /**
+     * Is used when there's currently an operator and another operator is entered.
+     * The "-" key doubles as both subtract and negative, so use case examples are below:
+     * If 5 + * 7 = is entered, the result should be 35 (i.e. 5 * 7)
+     * If 5 * - 5 = is entered, the result should be -25 (i.e. 5 * -5)
+     * If 5 * - + 5 is entered, the result should be 10. (i.e. 5 + 5)
+     *
+     * As such, the "end" value for slice changes depending on the previous operator(s) via remainingChars.
+     */
     clearLastOperator = val => {
-        const appendVal = typeof val === "string" ? val : "";
-        const nextInput = this.state.input.slice(0, -1) + appendVal;
+        const { previousVal, input } = this.state;
+        const operators = ["+", "-", "*", "/"];
+        const isOperator = operators.includes(val);
+
+        const remainingChars =
+            isOperator &&
+            previousVal === "-" &&
+            operators.includes(input[input.length - 1])
+                ? input.slice(0, -2)
+                : input.slice(0, -1);
+        const nextInput = remainingChars + val;
         this.setState({
             input: !!nextInput ? nextInput : "0",
             previousVal: val
         });
     };
 
+    /**
+     * For use with the "Del" key. The previousVal is set to know whether to allow an operator
+     */
     clearLast = () => {
         const nextInput = this.state.input.slice(0, -1);
         this.setState({
@@ -96,12 +148,6 @@ class App extends Component {
                 this.state.input.length - 1
             ),
             input: !!nextInput ? nextInput : "0"
-        });
-    };
-
-    operate = () => {
-        this.setState({
-            input: ""
         });
     };
 
