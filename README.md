@@ -1,4 +1,8 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was created to fulfill the requirements of the [Free Code Camp JavaScript Calculator project](https://www.freecodecamp.org/learn/front-end-libraries/front-end-libraries-projects/build-a-javascript-calculator)
+
+--------------------------
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app
 
 ## Available Scripts
 
